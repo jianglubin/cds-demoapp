@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="DbInfoDO" type="com.wangyin.wycds.web.dal.dataobject.DbInfoDO"/>
+        <typeAlias alias="DbGroupDO" type="com.wangyin.wycds.web.dal.dataobject.DbGroupDO"/>
+        <typeAlias alias="DbClusterDO" type="com.wangyin.wycds.web.dal.dataobject.DbClusterDO"/>
+        <typeAlias alias="DataSourceDO" type="com.wangyin.wycds.web.dal.dataobject.DataSourceDO"/>
+        <typeAlias alias="DbClusterDbGroupRelationDO" type="com.wangyin.wycds.web.dal.dataobject.DbClusterDbGroupRelationDO"/>
+        <typeAlias alias="DbInfoDbGroupRelationDO" type="com.wangyin.wycds.web.dal.dataobject.DbInfoDbGroupRelationDO"/>
+        <typeAlias alias="SplittingKeyDO" type="com.wangyin.wycds.web.dal.dataobject.SplittingKeyDO"/>
+        <typeAlias alias="ColumnInfoDO" type="com.wangyin.wycds.web.dal.dataobject.ColumnInfoDO"/>
+        <typeAlias alias="DepotsTableRulesDO" type="com.wangyin.wycds.web.dal.dataobject.DepotsTableRulesDO"/>
+        <typeAlias alias="SplittingKeyRuleRelationDO" type="com.wangyin.wycds.web.dal.dataobject.SplittingKeyRuleRelationDO"/>
+        <typeAlias alias="AppDO" type="com.wangyin.wycds.web.dal.dataobject.AppDO"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbInfoDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbGroupDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbClusterDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DataSourceDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbClusterDbGroupRelationDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DbInfoDbGroupRelationDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/SplittingKeyDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/ColumnInfoDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/DepotsTableRulesDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/SplittingKeyRuleRelationDAO.xml"/>
+        <mapper resource="com/wangyin/wycds/web/dal/persistence/AppDAO.xml"/>
+    </mappers>
+</configuration>
