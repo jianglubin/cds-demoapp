@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.demoapp.dal.datainterface.UsergroupDAO">
+    <cache/>
+    <resultMap type="UsergroupDO" id="usergroupResultMap">
+        <id property="roleId" column="usergroup_id"/>
+        <result property="usergroupName" column="usergroup_name"/>
+        <result property="source" column="source"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有用户组信息 -->
+    <select id="getUsergroupList" parameterType="com.wangyin.wycds.demoapp.util.Paginator" resultType="UsergroupDO"
+            resultMap="usergroupResultMap">
+        select * from usergroup where delete_status='false' order by usergroup_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有用户组信息总数 -->
+    <select id="getUsergroupListCount" resultType="Integer">
+        select count(usergroup_id) from usergroup where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询用户组信息-->
+    <select id="getUsergroupByParameters" parameterType="map" resultType="UsergroupDO" resultMap="usergroupResultMap">
+        select * from usergroup
+        <where>
+            delete_status='false'
+            <if test="usergroupVO.usergroupName!=null and usergroupVO.usergroupName!=''">and usergroup_name like CONCAT(CONCAT('%',
+                #{usergroupVO.usergroupName}),'%')
+            </if>
+        </where>
+        order by usergroup_id desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询用户组总数-->
+    <select id="getUsergroupByParametersCount" parameterType="String" resultType="Integer">
+        select count(usergroup_id) from usergroup
+        <where>
+            delete_status='false'
+            <if test="usergroupVO.usergroupName!=null and usergroupVO.usergroupName!=''">and usergroup_name like CONCAT(CONCAT('%',
+                #{usergroupVO.usergroupName}),'%')
+            </if>
+        </where>
+    </select>
+    <!-- 根据id查询用户组信息-->
+    <select id="getUsergroupById" parameterType="String" resultType="UsergroupDO" resultMap="usergroupResultMap">
+        select * from usergroup where usergroup_id=#{id}
+    </select>
+    <!-- 更新用户组信息 -->
+    <update id="updateUsergroup" parameterType="String">
+        UPDATE usergroup set usergroup_name=#{usergroupName},modified_by=#{modifiedBy} and modification_date=sysdate() where usergroup_id=#{id}
+    </update>
+    <!-- 删除用户组信息 -->
+    <update id="deleteUsergroup" parameterType="String">
+        UPDATE usergroup set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where usergroup_id=#{id}
+    </update>
+    <!-- 插入用户组信息 -->
+    <insert id="insertUsergroup" parameterType="UsergroupDO" useGeneratedKeys="true">
+        INSERT INTO usergroup
+        (`usergroup_id`,
+        `usergroup_name`,
+        `source`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{loginName},
+        #{usergroupName},
+        #{source},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>

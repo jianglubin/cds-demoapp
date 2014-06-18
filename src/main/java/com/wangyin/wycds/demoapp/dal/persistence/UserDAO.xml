@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyin.wycds.demoapp.dal.datainterface.UserDAO">
+    <cache/>
+    <resultMap type="UserDO" id="userResultMap">
+        <id property="loginName" column="login_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="loginPassword" column="login_password"/>
+        <result property="source" column="source"/>
+        <result property="createBy" column="create_by"/>
+        <result property="creationDate" column="creation_date"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="modificationDate" column="modification_date"/>
+        <result property="deleteStatus" column="delete_status"/>
+    </resultMap>
+    <!-- 获取状态为"未删除"的所有用户信息 -->
+    <select id="getUserList" parameterType="com.wangyin.wycds.demoapp.util.Paginator" resultType="UserDO"
+            resultMap="userResultMap">
+        select * from users where delete_status='false' order by login_name desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的所有用户信息总数 -->
+    <select id="getUserListCount" resultType="Integer">
+        select count(login_name) from users where delete_status='false'
+    </select>
+    <!-- 根据组合条件查询用户信息-->
+    <select id="getUserByParameters" parameterType="map" resultType="UserDO" resultMap="userResultMap">
+        select * from USERS
+        <where>
+            delete_status='false'
+            <if test="userVO.userName!=null and userVO.userName!=''">and app_name like CONCAT(CONCAT('%',
+                #{userVO.userName}),'%')
+            </if>
+        </where>
+        order by login_name desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 根据组合条件查询用户总数-->
+    <select id="getUserByParametersCount" parameterType="map" resultType="Integer">
+        select count(login_name) from users
+        <where>
+            delete_status='false'
+            <if test="userVO.userName!=null and userVO.userName!=''">and user_name like CONCAT(CONCAT('%',
+                #{userVO.userName}),'%')
+            </if>
+        </where>
+    </select>
+    <!-- 根据id查询用户信息-->
+    <select id="getUserByLoginName" parameterType="String" resultType="UserDO" resultMap="userResultMap">
+        select * from users where login_name=#{loginName}
+    </select>
+    <!-- 更新用户信息 -->
+    <update id="updateUser" parameterType="UserDO">
+        UPDATE users
+        <set>
+            <if test="userName!=null and userName!=''">user_name=#{userName},</if>
+            <if test="loginPassword!=null and loginPassword!=''">login_password=#{loginPassword},</if>
+            <if test="modifiedBy!=null and modifiedBy!=''">modified_by=#{modifiedBy},</if>
+            modification_date=sysdate()
+        </set>
+        <where>
+            login_name=#{id}
+        </where>
+    </update>
+    <!-- 删除用户信息 -->
+    <update id="deleteUser" parameterType="String">
+        UPDATE users set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where login_name=#{loginName}
+    </update>
+    <!-- 插入用户信息 -->
+    <insert id="insertUser" parameterType="UserDO" useGeneratedKeys="true">
+        INSERT INTO users
+        (`login_name`,
+        `user_name`,
+        `login_password`,
+        `source`,
+        `create_by`,
+        `creation_date`,
+        `modification_date`,
+        `modified_By`)
+        VALUES
+        (#{loginName},
+        #{userName},
+        #{loginPassword},
+        #{source},
+        #{createBy},
+        sysdate(),
+        sysdate(),
+        #{modifiedBy});
+    </insert>
+</mapper>
