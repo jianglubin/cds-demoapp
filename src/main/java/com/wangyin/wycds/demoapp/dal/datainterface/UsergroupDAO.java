@@ -47,22 +47,22 @@ public interface UsergroupDAO {
     public UsergroupDO getUsergroupById(String id);
 
     /**
-     * 根据组合条件查询用户组信息
+     * 根据用户组名称查询用户组信息
      *
-     * @param usergroupVO
+     * @param usergroupName
      * @param beginIndex
      * @param itemsPerPage
      * @return
      */
-    public List<UsergroupDO> getUsergroupByParameters(@Param("usergroupVO") UsergroupVO usergroupVO, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
+    public List<UsergroupDO> getUsergroupByUsergroupName(@Param("usergroupName") String usergroupName, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
 
     /**
-     * 根据组合条件查询用户组信息总数
+     * 根据用户组名称查询用户组信息总数
      *
-     * @param usergroupVO
+     * @param usergroupName
      * @return
      */
-    public Integer getUsergroupByParametersCount(@Param("usergroupVO") UsergroupVO usergroupVO);
+    public Integer getUsergroupByUsergroupNameCount(@Param("usergroupName") String usergroupName);
 
 
     /**
@@ -75,12 +75,10 @@ public interface UsergroupDAO {
 
     /**
      * 更新一条用户组信息
-     * @param id
-     * @param usergroupName
-     * @param modifiedBy
+     * @param usergroupDO
      * @return
      */
-    public int updateUsergroup(@Param("id") String id, @Param("usergroupName") String usergroupName, @Param("modifiedBy") String modifiedBy);
+    public int updateUsergroup(UsergroupDO usergroupDO);
 
     /**
      * 删除一条用户组信息
@@ -89,4 +87,12 @@ public interface UsergroupDAO {
      * @param modifiedBy
      */
     public int deleteUsergroup(@Param("id") String id, @Param("modifiedBy") String modifiedBy);
+
+    /**
+     * 根据登录名查询用户组
+     *
+     * @param loginName
+     * @return
+     */
+    public List<UsergroupDO> getUsergroupListByLoginName(String loginName);
 }

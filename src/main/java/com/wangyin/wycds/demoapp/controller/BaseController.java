@@ -61,9 +61,8 @@ public class BaseController {
      * @return
      */
     protected String getUser(HttpSession session) {
-        User user = (User) session.getAttribute(com.wangyin.ssoclient.sso.model.Configuration.userSession);
-
-        return user.getUsername();
-        // return "蒋鲁宾";
+//        User user = (User) session.getAttribute(com.wangyin.ssoclient.sso.model.Configuration.userSession);
+//        return user.getUsername();
+        return "admin";
     }
 }

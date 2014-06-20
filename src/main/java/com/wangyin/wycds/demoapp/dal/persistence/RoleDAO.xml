@@ -13,65 +13,63 @@
         <result property="modificationDate" column="modification_date"/>
         <result property="deleteStatus" column="delete_status"/>
     </resultMap>
-    <!-- 获取状态为"未删除"的所有权限信息 -->
+    <!-- 获取状态为"未删除"的所有角色信息 -->
     <select id="getRoleList" parameterType="com.wangyin.wycds.demoapp.util.Paginator" resultType="RoleDO"
             resultMap="roleResultMap">
         select * from roles where delete_status='false' order by role_id desc LIMIT #{beginIndex},#{itemsPerPage}
     </select>
-    <!-- 获取状态为"未删除"的所有权限信息总数 -->
+    <!-- 获取状态为"未删除"的所有角色信息总数 -->
     <select id="getRoleListCount" resultType="Integer">
         select count(role_id) from roles where delete_status='false'
     </select>
-    <!-- 根据组合条件查询权限信息-->
-    <select id="getRoleByParameters" parameterType="map" resultType="RoleDO" resultMap="roleResultMap">
+    <!-- 根据角色名查询角色信息-->
+    <select id="getRoleByRoleName" parameterType="map" resultType="RoleDO" resultMap="roleResultMap">
         select * from roles
         <where>
-            delete_status='false'
-            <if test="roleVO.roleName!=null and roleVO.roleName!=''">and role_name like CONCAT(CONCAT('%',
-                #{roleVO.roleName}),'%')
-            </if>
+            delete_status='false' and role_name like CONCAT(CONCAT('%', #{roleName}),'%')
         </where>
         order by role_id desc LIMIT #{beginIndex},#{itemsPerPage}
     </select>
-    <!-- 根据组合条件查询权限总数-->
-    <select id="getRoleByParametersCount" parameterType="String" resultType="Integer">
+    <!-- 根据组合条件查询角色总数-->
+    <select id="getRoleByRoleNameCount" parameterType="String" resultType="Integer">
         select count(role_id) from roles
         <where>
-            delete_status='false'
-            <if test="roleVO.roleName!=null and roleVO.roleName!=''">and role_name like CONCAT(CONCAT('%',
-                #{roleVO.roleName}),'%')
-            </if>
+            delete_status='false' and role_name like CONCAT(CONCAT('%',#{roleName}),'%')
         </where>
     </select>
-    <!-- 根据id查询权限信息-->
+    <!-- 根据id查询角色信息-->
     <select id="getRoleById" parameterType="String" resultType="RoleDO" resultMap="roleResultMap">
         select * from roles where role_id=#{id}
     </select>
-    <!-- 更新权限信息 -->
+    <!-- 更新角色信息 -->
     <update id="updateRole" parameterType="String">
-        UPDATE roles set role_name=#{roleName},modified_by=#{modifiedBy} and modification_date=sysdate() where role_id=#{id}
+        UPDATE roles set role_name=#{roleName},modified_by=#{modifiedBy},modification_date=sysdate() where role_id=#{roleId}
     </update>
-    <!-- 删除权限信息 -->
+    <!-- 删除角色信息 -->
     <update id="deleteRole" parameterType="String">
         UPDATE roles set delete_status='true',modified_by=#{modifiedBy},modification_date=sysdate() where role_id=#{id}
     </update>
-    <!-- 插入权限信息 -->
+    <!-- 插入角色信息 -->
     <insert id="insertRole" parameterType="RoleDO" useGeneratedKeys="true">
         INSERT INTO roles
-        (`role_id`,
-        `role_name`,
+        (`role_name`,
         `source`,
         `create_by`,
         `creation_date`,
         `modification_date`,
         `modified_By`)
         VALUES
-        (#{loginName},
-        #{roleName},
+        (#{roleName},
         #{source},
         #{createBy},
         sysdate(),
         sysdate(),
         #{modifiedBy});
     </insert>
+    <!-- 根据登陆名查询角色的角色值 -->
+    <select id="getRoleListByLoginName" parameterType="String" resultType="RoleDO"
+            resultMap="roleResultMap">
+        select * from roles r left join rusersroles ru on r.role_id=ru.role_id left join users u on ru.login_id=u.login_name where
+        u.login_name=#{loginName} and u.delete_status='false' and r.delete_status='false'
+    </select>
 </mapper>

@@ -7,7 +7,7 @@ package com.wangyin.wycds.demoapp.dal.dataobject;
 import java.io.Serializable;
 
 /**
- * 权限DO
+ * 角色DO
  *
  * @author 蒋鲁宾
  * @version v 0.1 2014/6/18 16:09 Exp $$
@@ -19,11 +19,11 @@ public class RoleDO implements Serializable {
      */
     private static final long serialVersionUID = 4525293400966727234L;
     /**
-     * 权限id
+     * 角色id
      */
     private String roleId;
     /**
-     * 权限名称
+     * 角色名称
      */
     private String roleName;
     /**

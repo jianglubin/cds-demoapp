@@ -4,6 +4,9 @@
  */
 package com.wangyin.wycds.demoapp.controller.vo;
 
+import com.wangyin.wycds.demoapp.controller.enums.SourceEnum;
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.util.List;
 
 /**
@@ -17,19 +20,22 @@ public class UserVO extends BaseVO{
     /**
      * 登录名
      */
+    @NotBlank(message = "登录名不能为空!")
     private String loginName;
     /**
      * 真实姓名
      */
+    @NotBlank(message = "真实姓名不能为空!")
     private String userName;
     /**
      * 登录密码
      */
+    @NotBlank(message = "登录密码不能为空!")
     private String loginPassword;
     /**
      * 创建来源
      */
-    private String source;
+    private String source= SourceEnum.CDSWEB_CREATE.getCode();
     /**
      * 权限列表
      */
@@ -73,5 +79,29 @@ public class UserVO extends BaseVO{
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public List<RoleVO> getRoleVOs() {
+        return roleVOs;
+    }
+
+    public void setRoleVOs(List<RoleVO> roleVOs) {
+        this.roleVOs = roleVOs;
+    }
+
+    public List<UsergroupVO> getUsergroupVOs() {
+        return usergroupVOs;
+    }
+
+    public void setUsergroupVOs(List<UsergroupVO> usergroupVOs) {
+        this.usergroupVOs = usergroupVOs;
+    }
+
+    public DepartmentVO getDepartmentVO() {
+        return departmentVO;
+    }
+
+    public void setDepartmentVO(DepartmentVO departmentVO) {
+        this.departmentVO = departmentVO;
     }
 }

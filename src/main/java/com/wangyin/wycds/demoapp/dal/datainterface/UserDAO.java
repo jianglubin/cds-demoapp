@@ -47,22 +47,22 @@ public interface UserDAO {
     public UserDO getUserByLoginName(String loginName);
 
     /**
-     * 根据组合条件查询用户信息
+     * 根据用户名称模糊查询用户信息
      *
-     * @param userVO
+     * @param userName
      * @param beginIndex
      * @param itemsPerPage
      * @return
      */
-    public List<UserDO> getUserByParameters(@Param("userVO") UserVO userVO, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
+    public List<UserDO> getUserByUserName(@Param("userName") String userName, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
 
     /**
-     * 根据组合条件查询用户信息总数
+     * 根据用户名称模糊查询用户信息总数
      *
-     * @param userVO
+     * @param userName
      * @return
      */
-    public Integer getUserByParametersCount(@Param("userVO") UserVO userVO);
+    public Integer getUserByUserNameCount(@Param("userName") String userName);
 
 
     /**

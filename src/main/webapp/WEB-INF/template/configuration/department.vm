@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-sm-3 nav nav-sidebar">
+        <div id="jstree_demo_div">
+            <ul>
+                <li>Root node 1</li>
+                <li>Root node 2</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-sm-8">111</div>
+</div>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        J('#jstree_demo_div').jstree({
+            'core': {
+                'data' : {
+                    async : true, //动态加载data
+                    'url' : function (node) {
+                        return node.id === '#' ?
+                                '/department/show.json' : '/department/show.json';
+                    },
+                    'data' : function (node) {
+                        return { 'id' : node.id };
+                    }
+                }
+            }
+        });
+        J('#jstree_demo_div').on("changed.jstree", function (e, data) {
+            console.log(data.selected);
+        });
+    });
+</script>

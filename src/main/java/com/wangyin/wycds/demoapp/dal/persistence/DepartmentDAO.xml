@@ -48,6 +48,10 @@
     <select id="getDepartmentById" parameterType="String" resultType="DepartmentDO" resultMap="departmentResultMap">
         select * from departments where department_id=#{id}
     </select>
+    <!-- 根据父部门id查询部门信息-->
+    <select id="getDepartmentByParentId" parameterType="String" resultType="DepartmentDO" resultMap="departmentResultMap">
+        select * from departments where parent_id=#{parentId}
+    </select>
     <!-- 更新部门信息 -->
     <update id="updateDepartment" parameterType="String">
         UPDATE departments set department_name=#{departmentName},modified_by=#{modifiedBy} and modification_date=sysdate() where department_id=#{id}
@@ -75,4 +79,10 @@
         sysdate(),
         #{modifiedBy});
     </insert>
+    <!-- 根据登陆名查询用户所属部门 -->
+    <select id="getDepartmentListByLoginName" parameterType="String" resultType="DepartmentDO"
+            resultMap="departmentResultMap">
+        select * from departments d left join rusersdepartment rd on d.department_id=rd.department_id left join users u on rd.login_id=u.login_name
+        where u.login_name=#{loginName} and u.delete_status='false' and d.delete_status='false'
+    </select>
 </mapper>

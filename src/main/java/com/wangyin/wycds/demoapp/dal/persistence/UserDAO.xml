@@ -24,24 +24,18 @@
         select count(login_name) from users where delete_status='false'
     </select>
     <!-- 根据组合条件查询用户信息-->
-    <select id="getUserByParameters" parameterType="map" resultType="UserDO" resultMap="userResultMap">
+    <select id="getUserByUserName" parameterType="map" resultType="UserDO" resultMap="userResultMap">
         select * from USERS
         <where>
-            delete_status='false'
-            <if test="userVO.userName!=null and userVO.userName!=''">and app_name like CONCAT(CONCAT('%',
-                #{userVO.userName}),'%')
-            </if>
+            delete_status='false' and user_name like CONCAT(CONCAT('%', #{userName}),'%')
         </where>
         order by login_name desc LIMIT #{beginIndex},#{itemsPerPage}
     </select>
     <!-- 根据组合条件查询用户总数-->
-    <select id="getUserByParametersCount" parameterType="map" resultType="Integer">
+    <select id="getUserByUserNameCount" parameterType="map" resultType="Integer">
         select count(login_name) from users
         <where>
-            delete_status='false'
-            <if test="userVO.userName!=null and userVO.userName!=''">and user_name like CONCAT(CONCAT('%',
-                #{userVO.userName}),'%')
-            </if>
+            delete_status='false' and user_name like CONCAT(CONCAT('%',#{userName}),'%')
         </where>
     </select>
     <!-- 根据id查询用户信息-->

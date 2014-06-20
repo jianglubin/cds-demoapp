@@ -4,6 +4,8 @@
  */
 package com.wangyin.wycds.demoapp.controller.vo;
 
+import com.wangyin.wycds.demoapp.controller.enums.SourceEnum;
+
 /**
  * 用户组视图
  *
@@ -14,30 +16,30 @@ public class UsergroupVO extends BaseVO{
     /**
      * 用户组id
      */
-    private String roleId;
+    private String usergroupId;
     /**
      * 用户组名称
      */
-    private String roleName;
+    private String usergroupName;
     /**
      * 创建来源
      */
-    private String source;
+    private String source= SourceEnum.CDSWEB_CREATE.getCode();
 
-    public String getRoleId() {
-        return roleId;
+    public String getUsergroupId() {
+        return usergroupId;
     }
 
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setUsergroupId(String usergroupId) {
+        this.usergroupId = usergroupId;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getUsergroupName() {
+        return usergroupName;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setUsergroupName(String usergroupName) {
+        this.usergroupName = usergroupName;
     }
 
     public String getSource() {

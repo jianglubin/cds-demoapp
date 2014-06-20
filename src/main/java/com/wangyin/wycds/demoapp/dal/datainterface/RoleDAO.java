@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 权限查询接口
+ * 角色查询接口
  *
  * @author 蒋鲁宾
  * @version v 0.1 2014/6/18 17:57 Exp $$
@@ -24,7 +24,7 @@ import java.util.List;
 public interface RoleDAO {
 
     /**
-     * 获取状态为"未删除"的所有权限信息
+     * 获取状态为"未删除"的所有角色信息
      *
      * @param paginator
      * @return
@@ -32,14 +32,14 @@ public interface RoleDAO {
     public List<RoleDO> getRoleList(Paginator paginator);
 
     /**
-     * 获取状态为"未删除"的所有权限信息的总数
+     * 获取状态为"未删除"的所有角色信息的总数
      *
      * @return
      */
     public Integer getRoleListCount();
 
     /**
-     * 根据登录名查询权限信息
+     * 根据登录名查询角色信息
      *
      * @param id
      * @return
@@ -47,26 +47,26 @@ public interface RoleDAO {
     public RoleDO getRoleById(String id);
 
     /**
-     * 根据组合条件查询权限信息
+     * 根据角色名查询角色信息
      *
-     * @param roleVO
+     * @param roleName
      * @param beginIndex
      * @param itemsPerPage
      * @return
      */
-    public List<RoleDO> getRoleByParameters(@Param("roleVO") RoleVO roleVO, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
+    public List<RoleDO> getRoleByRoleName(@Param("roleName") String roleName, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
 
     /**
-     * 根据组合条件查询权限信息总数
+     * 根据角色名查询角色信息总数
      *
-     * @param roleVO
+     * @param roleName
      * @return
      */
-    public Integer getRoleByParametersCount(@Param("roleVO") RoleVO roleVO);
+    public Integer getRoleByRoleNameCount(@Param("roleName") String roleName);
 
 
     /**
-     * 新增一条权限信息
+     * 新增一条角色信息
      *
      * @param roleDO
      * @return
@@ -74,19 +74,24 @@ public interface RoleDAO {
     public int insertRole(RoleDO roleDO);
 
     /**
-     * 更新一条权限信息
-     * @param id
-     * @param roleName
-     * @param modifiedBy
+     * 更新一条角色信息
      * @return
      */
-    public int updateRole(@Param("id") String id,@Param("roleName") String roleName, @Param("modifiedBy") String modifiedBy);
+    public int updateRole(RoleDO roleDO);
 
     /**
-     * 删除一条权限信息
+     * 删除一条角色信息
      *
      * @param id
      * @param modifiedBy
      */
     public int deleteRole(@Param("id") String id, @Param("modifiedBy") String modifiedBy);
+
+    /**
+     * 根据登录名查询用户角色
+     *
+     * @param loginName
+     * @return
+     */
+    public List<RoleDO> getRoleListByLoginName(String loginName);
 }

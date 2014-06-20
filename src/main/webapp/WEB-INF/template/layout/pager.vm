@@ -1,0 +1,70 @@
+#if($paginator)
+#set($beginIndex= $!{paginator.getBeginIndex()} + 1)
+<div class="col-sm-4">
+    显示第 $beginIndex - $paginator.getEndIndex() 条记录，共 $paginator.getItems() 条记录
+</div>
+<div class="col-sm-8">
+    <ul class="pagination pagination-right">
+        #if($paginator.getPage() == 1 || $paginator.getPages() == 0)
+            <li class="disabled"><a href="#" class="glyphicon glyphicon-step-backward"></a></li>
+            <li class="disabled"><a href="#" class="glyphicon glyphicon-arrow-left"></a></li>
+        #else
+            <li><a href="#" rel="1" class="glyphicon glyphicon-step-backward"></a></li>
+            <li><a href="#" rel="$paginator.getPreviousPage()" class="glyphicon glyphicon-arrow-left"></a></li>
+        #end
+
+        #set($sliders = $paginator.getSlider(7))
+        #if($sliders)
+            #foreach($slider in $sliders)
+                #if($paginator.isDisabledPage($slider))
+                    <li class="active"><a href="#">$slider</a></li>
+                #else
+                    <li><a href="#" rel="$slider">$slider</a></li>
+                #end
+            #end
+        #end
+
+        #if($paginator.getPage() != $paginator.getPages())
+            <li><a href="#" rel="$paginator.getNextPage()" class="glyphicon glyphicon-arrow-right"></a>
+            </li>
+            <li><a href="#" rel="$paginator.getPages()" class="glyphicon glyphicon-step-forward"></a>
+            </li>
+        #else
+            <li class="disabled"><a href="#" class="glyphicon glyphicon-arrow-right"></a></li>
+            <li class="disabled"><a href="#" class="glyphicon glyphicon-step-forward"></a></li>
+        #end
+        <li>
+            <div class="row col-xs-2" style="padding-left: 18px;padding-right: 15px;">
+                <input class="form-control" maxlength="10" type="text" value="$paginator.getPage()">
+            </div>
+            <div class="row col-xs-6 col-md-3">
+                <button id="go" rel="$paginator.getPages()" class="btn btn-primary  glyphicon glyphicon-share-alt"
+                        type="button" style="padding: 8px 8px;"/>
+                GO
+            </div>
+        </li>
+    </ul>
+</div>
+
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    var form = J("#insert-form");
+    //绑定每页点击方法
+    form.on("click", "ul li a", function (e) {
+        e.preventDefault();
+        J("#page").val(J(this).text());
+        form.submit();
+    });
+    //跳转页面
+    J("#go").click(function (e) {
+        e.preventDefault();
+        var text=J(".pagination input");
+        var num = parseInt(text.val());
+        var pages=parseInt(J(this).attr("rel"));
+        if (!num || num < 0 || (pages && (num > pages))) {
+            alert("请选择正确的页码!");
+        }
+        text.focus();
+    });
+</script>
+#end

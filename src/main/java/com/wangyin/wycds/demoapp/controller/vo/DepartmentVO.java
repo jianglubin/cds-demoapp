@@ -4,6 +4,10 @@
  */
 package com.wangyin.wycds.demoapp.controller.vo;
 
+import com.wangyin.wycds.demoapp.controller.enums.SourceEnum;
+
+import java.util.List;
+
 /**
  * 部门视图
  *
@@ -23,10 +27,15 @@ public class DepartmentVO extends BaseVO{
      * 上级部门id
      */
     private String parentId;
+
+    /**
+     * 下级部门列表
+     */
+    List<DepartmentVO> childrenDepartmentVOs;
     /**
      * 创建来源
      */
-    private String source;
+    private String source= SourceEnum.CDSWEB_CREATE.getCode();
 
     public String getDepartmentId() {
         return departmentId;
@@ -58,5 +67,13 @@ public class DepartmentVO extends BaseVO{
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public List<DepartmentVO> getChildrenDepartmentVOs() {
+        return childrenDepartmentVOs;
+    }
+
+    public void setChildrenDepartmentVOs(List<DepartmentVO> childrenDepartmentVOs) {
+        this.childrenDepartmentVOs = childrenDepartmentVOs;
     }
 }
