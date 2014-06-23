@@ -1,0 +1,53 @@
+#set($layout = "/layout/blank.vm")
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th></th>
+            <th>登录名</th>
+            <th>真实姓名</th>
+            <th>权限</th>
+            <th>所属群组</th>
+            <th>创建来源</th>
+        </tr>
+        </thead>
+        <tbody>
+            #if($!userVOs&&$!userVOs.size()!=0)
+                #foreach($user in $!userVOs)
+                <tr>
+                    <td><input type="checkbox" name="loginName" value="$!{user.loginName}"/></td>
+                    <td>$!{user.loginName}</td>
+                    <td>$!{user.userName}</td>
+                    #if($!user.roleVOs&&$!user.roleVOs.size()!=0)
+                        <td>
+                            #foreach($role in $!user.roleVOs)
+                                $!{role.roleName},
+                            #end
+                        </td>
+                    #else
+                        <td></td>
+                    #end
+                    #if($!user.usergroupVOs&&$!user.usergroupVOs.size()!=0)
+                        <td>
+                            #foreach($group in $!user.usergroupVOs)
+                                $!{group.usergroupName},
+                            #end
+                        </td>
+                    #else
+                        <td></td>
+                    #end
+                    <td>$!{user.source}</td>
+                </tr>
+                #end
+            #else
+            <tr>
+                <td colspan="6">暂无数据!</td>
+            </tr>
+            #end
+        </tbody>
+    </table>
+    <div class="row placeholders">
+        <input type="hidden" name="page" id="page" value="$!{page}">
+        #parse("/layout/pager.vm")
+    </div>
+</div>

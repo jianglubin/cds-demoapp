@@ -4,7 +4,6 @@
  */
 package com.wangyin.wycds.demoapp.controller;
 
-import com.wangyin.ssoclient.sso.model.User;
 import com.wangyin.wycds.demoapp.biz.UserService;
 import com.wangyin.wycds.demoapp.controller.vo.UserVO;
 import com.wangyin.wycds.demoapp.util.Paginator;
@@ -12,6 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,15 +35,36 @@ public class UserController extends BaseController {
      */
     private static final String RETURN_PAGE = "configuration/user";
 
+    /**
+     * 返回页面
+     */
+    private static final String RETURN_LIST_PAGE = "module/user_list";
     @Resource(name = "userService")
     private UserService userService;
 
     @RequestMapping("/user/show")
     public ModelAndView doGet(ModelMap modelMap) {
-        return queryAll(modelMap);
+        return queryAll(modelMap,RETURN_PAGE);
     }
 
-    private ModelAndView queryAll(ModelMap modelMap) {
+    @RequestMapping("/userList/query/{departmentId}")
+    public ModelAndView doListGet(@PathVariable String departmentId,Integer page,ModelMap modelMap) {
+        if (StringUtils.isBlank(departmentId)) {
+            return new ModelAndView(RETURN_LIST_PAGE, ERROR, "缺少部门id!");
+        }
+        List<UserVO> userVOs;
+        Paginator paginator = new Paginator();
+        paginator.setItemsPerPage(PAGE_SIZE);
+        if (page == null) {
+            paginator.setPage(1);
+        } else {
+            paginator.setPage(page);
+        }
+        userVOs = userService.getUserListByDepartmentId(departmentId,paginator);
+        modelMap.addAttribute("userVOs", userVOs);
+        return new ModelAndView(RETURN_LIST_PAGE,modelMap);
+    }
+    private ModelAndView queryAll(ModelMap modelMap,String returnPage) {
         List<UserVO> userVOs;
         Paginator paginator = new Paginator();
         paginator.setItemsPerPage(PAGE_SIZE);
@@ -51,7 +72,7 @@ public class UserController extends BaseController {
         userVOs = userService.getUserList(paginator);
         modelMap.addAttribute("paginator", paginator);
         modelMap.addAttribute("userVOs", userVOs);
-        return new ModelAndView(RETURN_PAGE, modelMap);
+        return new ModelAndView(returnPage, modelMap);
     }
 
     @RequestMapping("/user/add")
@@ -64,7 +85,7 @@ public class UserController extends BaseController {
         userVO.setModifiedBy(getUser(session));
         userService.addUser(userVO);
         modelMap.addAttribute(MESSAGE, "新增用户信息成功!");
-        return queryAll(modelMap);
+        return queryAll(modelMap,RETURN_LIST_PAGE);
     }
 
     @RequestMapping("/user/update")

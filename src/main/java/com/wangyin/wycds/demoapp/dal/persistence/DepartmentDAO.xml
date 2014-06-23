@@ -54,7 +54,7 @@
     </select>
     <!-- 更新部门信息 -->
     <update id="updateDepartment" parameterType="String">
-        UPDATE departments set department_name=#{departmentName},modified_by=#{modifiedBy} and modification_date=sysdate() where department_id=#{id}
+        UPDATE departments set department_name=#{departmentName},modified_by=#{modifiedBy},modification_date=sysdate() where department_id=#{id}
     </update>
     <!-- 删除部门信息 -->
     <update id="deleteDepartment" parameterType="String">
@@ -63,16 +63,16 @@
     <!-- 插入部门信息 -->
     <insert id="insertDepartment" parameterType="DepartmentDO" useGeneratedKeys="true">
         INSERT INTO departments
-        (`department_id`,
-        `department_name`,
+        (`department_name`,
+        `parent_id`,
         `source`,
         `create_by`,
         `creation_date`,
         `modification_date`,
         `modified_By`)
         VALUES
-        (#{loginName},
-        #{departmentName},
+        (#{departmentName},
+        #{parentId},
         #{source},
         #{createBy},
         sysdate(),

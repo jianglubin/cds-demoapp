@@ -1,33 +1,149 @@
 <div class="row">
-    <div class="col-sm-3 nav nav-sidebar">
-        <div id="jstree_demo_div">
-            <ul>
-                <li>Root node 1</li>
-                <li>Root node 2</li>
-            </ul>
+    <div class="col-sm-3">
+        <div class="form-group">
+            <button type="button" class="btn btn-success btn-sm" onclick="department_create()"><i
+                    class="glyphicon glyphicon-asterisk"></i> Create
+            </button>
+            <button type="button" class="btn btn-warning btn-sm" onclick="department_rename()"><i
+                    class="glyphicon glyphicon-pencil"></i> Rename
+            </button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="department_delete()"><i
+                    class="glyphicon glyphicon-remove"></i> Delete
+            </button>
+        </div>
+        <div class="form-group">
+            <input type="text" id="search" placeholder="Search"/>
+        </div>
+        <div class="form-group">
+            <div id="jstree_div"></div>
         </div>
     </div>
-    <div class="col-sm-8">111</div>
+    <div class="col-sm-9" id="iframe">
+
+    </div>
 </div>
 <script type="text/javascript">
     var J = jQuery.noConflict();
+    function department_create() {
+        var ref = J("#jstree_div").jstree(true),
+                sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        sel = sel[0];
+        sel = ref.create_node(sel, {"type": "file"});
+        if (sel) {
+            ref.edit(sel);
+        }
+    }
+    ;
+    function department_rename() {
+        var ref = J("#jstree_div").jstree(true)
+        var sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        sel = sel[0];
+        ref.edit(sel);
+    }
+    ;
+    function department_delete() {
+        var ref = J("#jstree_div").jstree(true),
+                sel = ref.get_selected();
+        if (!sel.length) {
+            return false;
+        }
+        ref.delete_node(sel);
+    }
+    ;
     J(document).ready(function () {
-        J('#jstree_demo_div').jstree({
-            'core': {
-                'data' : {
-                    async : true, //动态加载data
-                    'url' : function (node) {
-                        return node.id === '#' ?
-                                '/department/show.json' : '/department/show.json';
-                    },
-                    'data' : function (node) {
-                        return { 'id' : node.id };
+        J("#jstree_div").jstree({
+            "core": {
+                "animation": 0,
+                "check_callback": function (operation, node, node_parent, node_position, more) {
+                    // operation can be 'create_node', 'rename_node', 'delete_node', 'move_node' or 'copy_node'
+                    // in case of 'rename_node' node_position is filled with the new node name
+                    if(operation=='delete_node'&& !confirm("你确定要删除该节点么?")){
+                       return false;
+                    }else{
+                        var childrenLength=node.children.length
+                        if(childrenLength!=0){
+                            alert("该部门有下属部门无法删除!");
+                            return false;
+                        }
                     }
+                   return true;
+                },
+                "themes": { "stripes": true },
+                "data": {
+                    url: "/department/showJson",//每次获得数据从这个链接
+                    async: true,//动态加载数据
+                    async_data: function (NODE) {//请求数据时带的参数列表，可通过getParameter获得。
+                        return {parent_Id: J(NODE).attr("id") || 0}
+                    }
+                },
+            },
+            "plugins": [
+                "contextmenu", "dnd", "search",
+                "state", "types", "wholerow"
+            ]
+        });
+        J("#jstree_div").on("changed.jstree", function (e, data) {
+            if (data.node != null) {
+                var departmentId = data.node.id;
+                if (departmentId != '') {
+                    J("#iframe").load("/userList/query/" + departmentId)
                 }
             }
         });
-        J('#jstree_demo_div').on("changed.jstree", function (e, data) {
-            console.log(data.selected);
+        J("#jstree_div").on("create_node.jstree", function (e, data, position) {
+            var parentId = parent.node.parent;
+            var departmentName = parent.node.text;
+            J.ajax({
+                type: "POST",
+                url: "../department/add/" + parentId + "/" + departmentName,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        });
+        J("#jstree_div").on("rename_node.jstree", function (e, data, old) {
+            var departmentId = data.node.id;
+            var departmentName = data.node.text;
+            J.ajax({
+                type: "POST",
+                url: "../department/update/" + departmentId + "/" + departmentName,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
+        });
+        J("#jstree_div").on("delete_node.jstree", function (e, data) {
+            var departmentId = data.node.id;
+//            J.ajax({
+//                type: "POST",
+//                url: "../department/delete/" + departmentId ,
+//                dataType: "json",
+//                success: function (data, textStatus, jqXHR) {
+//                },
+//                error: function (xhr, textStatus, errorThrown) {
+//                }
+//            });
+        });
+        //查询框
+        var to = false;
+        J('#search').keyup(function () {
+            if (to) {
+                clearTimeout(to);
+            }
+            to = setTimeout(function () {
+                var v = J('#search').val();
+                J('#jstree_div').jstree(true).search(v);
+            }, 250);
         });
     });
 </script>

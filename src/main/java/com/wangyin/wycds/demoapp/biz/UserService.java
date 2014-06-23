@@ -77,6 +77,36 @@ public class UserService {
     }
 
     /**
+     * 获取部门下所有的用户信息
+     *
+     * @param departmentId
+     * @param paginator
+     * @return
+     */
+    public List<UserVO> getUserListByDepartmentId(String departmentId,Paginator paginator) {
+        List<UserVO> userVOs = new ArrayList<UserVO>();
+        int countNum=userDAO.getUserListByDepartmentIdCount(departmentId);
+        if(countNum==0){
+            return  null;
+        }
+        paginator.setItems(countNum);
+        List<UserDO> userDOs = userDAO.getUserListByDepartmentId(departmentId, paginator.getBeginIndex(), paginator.getItemsPerPage());
+        if (CollectionUtils.isEmpty(userDOs)) {
+            return null;
+        }
+        for (UserDO userDO : userDOs) {
+            UserVO userVO = new UserVO();
+            String loginName = userDO.getLoginName();
+            ConvertUtil.copyProperties(userDO, userVO);
+            userVO.setRoleVOs(getRoleList(loginName));
+            userVO.setUsergroupVOs(getUsergroupList(loginName));
+            userVO.setDepartmentVO(getDepartment(loginName));
+            userVOs.add(userVO);
+        }
+        return userVOs;
+    }
+
+    /**
      * 获取用户所有的权限
      *
      * @param loginName

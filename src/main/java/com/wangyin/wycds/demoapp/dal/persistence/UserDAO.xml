@@ -23,6 +23,15 @@
     <select id="getUserListCount" resultType="Integer">
         select count(login_name) from users where delete_status='false'
     </select>
+    <!-- 获取状态为"未删除"的某个部门下的用户信息 -->
+    <select id="getUserListByDepartmentId" parameterType="map" resultType="UserDO"
+            resultMap="userResultMap">
+        select * from users u where u.delete_status='false' and u.login_name in (select r.login_id from rusersdepartment r where r.department_id=#{departmentId}) order by login_name desc LIMIT #{beginIndex},#{itemsPerPage}
+    </select>
+    <!-- 获取状态为"未删除"的某个部门下的用户信息总数 -->
+    <select id="getUserListByDepartmentIdCount" resultType="Integer">
+        select count(u.login_name) from users u where u.delete_status='false' and u.login_name in (select r.login_id from rusersdepartment r where r.department_id=#{departmentId})
+    </select>
     <!-- 根据组合条件查询用户信息-->
     <select id="getUserByUserName" parameterType="map" resultType="UserDO" resultMap="userResultMap">
         select * from USERS

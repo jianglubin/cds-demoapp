@@ -39,6 +39,24 @@ public interface UserDAO {
     public Integer getUserListCount();
 
     /**
+     * 获取状态为"未删除"的部门下所有的用户信息
+     *
+     * @param departmentId
+     * @param beginIndex
+     * @param itemsPerPage
+     * @return
+     */
+    public List<UserDO> getUserListByDepartmentId(@Param("departmentId")String departmentId, @Param("beginIndex") Integer beginIndex, @Param("itemsPerPage") Integer itemsPerPage);
+
+    /**
+     * 获取状态为"未删除"的部门下所有的用户信息的总数
+     *
+     * @param departmentId
+     * @return
+     */
+    public Integer getUserListByDepartmentIdCount(String departmentId);
+
+    /**
      * 根据登录名查询用户信息
      *
      * @param loginName
