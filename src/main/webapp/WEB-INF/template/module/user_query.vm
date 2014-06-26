@@ -1,0 +1,144 @@
+#set($layout = "/layout/blank.vm")
+<h3 class="page-header">查询条件</h3>
+<form class="form-horizontal" id="insert-form" role="form" action="../userQuery/query" method="post">
+    <div class="row placeholders">
+        <div class="form-group">
+            <label for="loginName" class="col-sm-2 control-label">登录名</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="loginName" name="loginName"
+                       value="$!{userQueryForm.loginName}">
+            </div>
+            <label for="userName" class="col-sm-1 control-label">真实姓名</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="userName" name="userName"
+                       value="$!{userQueryForm.userName}">
+            </div>
+            <label for="departmentId" class="col-sm-1 control-label">部门id</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="departmentId" name="departmentId"
+                       value="$!{userQueryForm.departmentId}">
+            </div>
+
+
+        </div>
+        <div class="form-group">
+            <label for="roleId" class="col-sm-2 control-label">角色id</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="roleId" name="roleId"
+                       value="$!{userQueryForm.roleId}">
+            </div>
+            <label for="roleName" class="col-sm-1 control-label">角色名</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="roleName" name="roleName"
+                       value="$!{userQueryForm.roleName}">
+            </div>
+            <label for="usergroupId" class="col-sm-1 control-label">用户组id</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="usergroupId" name="usergroupId"
+                       value="$!{userQueryForm.usergroupId}">
+            </div>
+
+        </div>
+        <div class="form-group">
+            <label for="departmentName" class="col-sm-2 control-label">部门名称</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="departmentName" name="departmentName"
+                       value="$!{userQueryForm.departmentName}">
+            </div>
+
+            <label for="usergroupName" class="col-sm-1 control-label">用户组名称</label>
+
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="usergroupName" name="usergroupName"
+                       value="$!{userQueryForm.usergroupName}">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="text-success col-sm-offset-2 col-sm-10" id="db-handle-message">
+                #if( $!{message})
+                    $!{message}
+                #elseif($!{error})
+                    <p class="text-danger glyphicon glyphicon-remove">$!{error}</p>
+                #end
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" class="btn btn-success glyphicon glyphicon-ok" id="addDb">添加选中用户</button>
+                <button type="button" class="btn btn-primary glyphicon glyphicon-search" id="queryDb">查 询</button>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th></th>
+                <th>登录名</th>
+                <th>真实姓名</th>
+                <th>权限</th>
+                <th>所属群组</th>
+                <th>所属部门</th>
+                <th>创建来源</th>
+            </tr>
+            </thead>
+            <tbody>
+                #if($!userVOs&&$!userVOs.size()!=0)
+                    #foreach($user in $!userVOs)
+                    <tr>
+                        <td><input type="checkbox" name="loginName" value="$!{user.loginName}"/></td>
+                        <td>$!{user.loginName}</td>
+                        <td>$!{user.userName}</td>
+                        #if($!user.roleVOs&&$!user.roleVOs.size()!=0)
+                            <td>
+                                #foreach($role in $!user.roleVOs)
+                                    $!{role.roleName},
+                                #end
+                            </td>
+                        #else
+                            <td></td>
+                        #end
+                        #if($!user.usergroupVOs&&$!user.usergroupVOs.size()!=0)
+                            <td>
+                                #foreach($group in $!user.usergroupVOs)
+                                    $!{group.usergroupName},
+                                #end
+                            </td>
+                        #else
+                            <td></td>
+                        #end
+                        <td>$!{user.departmentVO.departmentName}</td>
+                        <td>$!{user.source}</td>
+                    </tr>
+                    #end
+                #else
+                <tr>
+                    <td colspan="7">暂无数据!</td>
+                </tr>
+                #end
+            </tbody>
+        </table>
+        <div class="row placeholders">
+            <input type="hidden" name="page" id="page" value="$!{page}">
+            #parse("/layout/pager.vm")
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    var J = jQuery.noConflict();
+    J(document).ready(function () {
+        //新增用户信息
+        J("#queryDb").click(function (e) {
+            e.preventDefault();
+            J("#insert-form").attr("action", "../user/add")
+            J("#insert-form").submit();
+        });
+    });
+</script>

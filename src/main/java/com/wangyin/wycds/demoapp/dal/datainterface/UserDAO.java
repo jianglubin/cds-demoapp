@@ -4,6 +4,7 @@
  */
 package com.wangyin.wycds.demoapp.dal.datainterface;
 
+import com.wangyin.wycds.demoapp.controller.form.UserQueryForm;
 import com.wangyin.wycds.demoapp.controller.vo.UserVO;
 import com.wangyin.wycds.demoapp.dal.dataobject.UserDO;
 import com.wangyin.wycds.demoapp.util.Paginator;
@@ -106,4 +107,19 @@ public interface UserDAO {
      * @param modifiedBy
      */
     public int deleteUser(@Param("loginName") String loginName, @Param("modifiedBy") String modifiedBy);
+
+    /**
+     * 获取综合查询结果
+     * @param userQueryForm
+     * @param paginator
+     * @return
+     */
+    public List<UserDO> getUserListByParameter(@Param("userQueryForm") UserQueryForm userQueryForm,@Param("paginator") Paginator paginator);
+
+    /**
+     * 获取综合查询总数
+     *
+     * @return
+     */
+    public Integer getUserListByParameterCount(UserQueryForm userQueryForm);
 }

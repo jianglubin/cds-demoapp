@@ -3,6 +3,7 @@
     <li><a href="../role/show">角色维护</a></li>
     <li><a href="../usergroup/show">用户组维护</a></li>
     <li><a href="../department/show">部门维护</a></li>
+    <li><a href="../userQuery/show">综合查询用户</a></li>
 </ul>
 ##<script type="text/javascript">
 ##    var J = jQuery.noConflict();

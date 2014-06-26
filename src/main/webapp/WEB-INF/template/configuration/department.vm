@@ -18,12 +18,34 @@
             <div id="jstree_div"></div>
         </div>
     </div>
-    <div class="col-sm-9" id="iframe">
+    <div class="col-sm-9" >
+        <input type="hidden" id="departmentId"/>
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#myModal" onclick="show_user()"><i
+                class="glyphicon glyphicon-asterisk"></i> 新增用户
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" onclick="user_delete()"><i
+                class="glyphicon glyphicon-remove"></i> 删除用户
+        </button>
+        <div id="iframe" >
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="user_list">
 
+        </div>
     </div>
 </div>
 <script type="text/javascript">
     var J = jQuery.noConflict();
+    function show_user(){
+        var departmentId =  J("#departmentId").val();
+        if (departmentId != '') {
+            J("#user_list").load("/userQuery/query/")
+        }
+    }
     function department_create() {
         var ref = J("#jstree_div").jstree(true),
                 sel = ref.get_selected();
@@ -36,7 +58,6 @@
             ref.edit(sel);
         }
     }
-    ;
     function department_rename() {
         var ref = J("#jstree_div").jstree(true)
         var sel = ref.get_selected();
@@ -46,7 +67,6 @@
         sel = sel[0];
         ref.edit(sel);
     }
-    ;
     function department_delete() {
         var ref = J("#jstree_div").jstree(true),
                 sel = ref.get_selected();
@@ -55,7 +75,6 @@
         }
         ref.delete_node(sel);
     }
-    ;
     J(document).ready(function () {
         J("#jstree_div").jstree({
             "core": {
@@ -91,6 +110,7 @@
         J("#jstree_div").on("changed.jstree", function (e, data) {
             if (data.node != null) {
                 var departmentId = data.node.id;
+                J("#departmentId").val(departmentId);
                 if (departmentId != '') {
                     J("#iframe").load("/userList/query/" + departmentId)
                 }
@@ -124,15 +144,15 @@
         });
         J("#jstree_div").on("delete_node.jstree", function (e, data) {
             var departmentId = data.node.id;
-//            J.ajax({
-//                type: "POST",
-//                url: "../department/delete/" + departmentId ,
-//                dataType: "json",
-//                success: function (data, textStatus, jqXHR) {
-//                },
-//                error: function (xhr, textStatus, errorThrown) {
-//                }
-//            });
+            J.ajax({
+                type: "POST",
+                url: "../department/delete/" + departmentId ,
+                dataType: "json",
+                success: function (data, textStatus, jqXHR) {
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                }
+            });
         });
         //查询框
         var to = false;

@@ -89,4 +89,58 @@
         sysdate(),
         #{modifiedBy});
     </insert>
+    <!-- 获取状态为"未删除"的所有用户信息 -->
+    <select id="getUserListByParameter" parameterType="map" resultType="UserDO" resultMap="userResultMap">
+        select * from users u
+        <where>
+            delete_status='false'
+            <if test="userQueryForm.userName!=null and userQueryForm.userName!=''">and u.user_name like CONCAT(CONCAT('%',#{userQueryForm.userName}),'%')</if>
+            <if test="userQueryForm.departmentName!='' or userQueryForm.departmentId!=''">
+                and u.login_name in (select rd.login_id from departments d,rusersdepartment rd where d.department_id=rd.department_id
+                <if test="userQueryForm.departmentName!=null and userQueryForm.departmentName!=''">and d.department_name like CONCAT(CONCAT('%',#{userQueryForm.departmentName}),'%')</if>
+                <if test="userQueryForm.departmentId!=null and userQueryForm.departmentId!=''">and d.department_id=#{userQueryForm.departmentId}</if>
+                )
+            </if>
+            <if test="userQueryForm.roleName!='' or userQueryForm.roleId!=''">
+                and u.login_name in (select rr.login_id from roles r,rusersroles rr where r.role_id=rr.role_id
+                <if test="userQueryForm.roleName!=null and userQueryForm.roleName!=''">and r.role_name like CONCAT(CONCAT('%',#{userQueryForm.roleName}),'%')</if>
+                <if test="userQueryForm.roleId!=null and userQueryForm.roleId!=''">and r.role_id=#{userQueryForm.roleId}</if>
+                )
+            </if>
+            <if test="userQueryForm.usergroupName!='' or userQueryForm.usergroupId!=''">
+                and u.login_name in (select ru.login_id from usergroup ug,rusersusergroup ru where ug.usergroup_id=ru.usergroup_id
+                <if test="userQueryForm.usergroupName!=null and userQueryForm.usergroupName!=''">and ug.usergroup_name like CONCAT(CONCAT('%',#{userQueryForm.usergroupName}),'%')</if>
+                <if test="userQueryForm.usergroupId!=null and userQueryForm.usergroupId!=''">and ug.usergroup_id=#{userQueryForm.usergroupId}</if>
+                )
+            </if>
+        </where>
+        order by login_name desc LIMIT #{paginator.beginIndex},#{paginator.itemsPerPage}
+    </select>
+
+    <!-- 获取状态为"未删除"的所有用户信息总数 -->
+    <select id="getUserListByParameterCount" parameterType="com.wangyin.wycds.demoapp.controller.form.UserQueryForm" resultType="Integer">
+        select count(login_name) from users u
+        <where>
+            u.delete_status='false'
+            <if test="userName!=null and userName!=''">and u.user_name like CONCAT(CONCAT('%',#{userName}),'%')</if>
+            <if test="departmentName!='' or departmentId!=''">
+                and u.login_name in (select rd.login_id from departments d,rusersdepartment rd where d.department_id=rd.department_id
+                <if test="departmentName!=null and departmentName!=''">and d.department_name like CONCAT(CONCAT('%',#{departmentName}),'%')</if>
+                <if test="departmentId!=null and departmentId!=''">and d.department_id=#{departmentId}</if>
+                )
+            </if>
+            <if test="roleName!='' or roleId!=''">
+                and u.login_name in (select rr.login_id from roles r,rusersroles rr where r.role_id=rr.role_id
+                <if test="roleName!=null and roleName!=''">and r.role_name like CONCAT(CONCAT('%',#{roleName}),'%')</if>
+                <if test="roleId!=null and roleId!=''">and r.role_id=#{roleId}</if>
+                )
+            </if>
+            <if test="usergroupName!='' or usergroupId!=''">
+                and u.login_name in (select ru.login_id from usergroup ug,rusersusergroup ru where ug.usergroup_id=ru.usergroup_id
+                <if test="usergroupName!=null and usergroupName!=''">and ug.usergroup_name like CONCAT(CONCAT('%',#{usergroupName}),'%')</if>
+                <if test="usergroupId!=null and usergroupId!=''">and ug.usergroup_id=#{usergroupId}</if>
+                )
+            </if>
+        </where>
+    </select>
 </mapper>

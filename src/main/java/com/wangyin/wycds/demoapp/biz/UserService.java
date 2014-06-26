@@ -4,6 +4,7 @@
  */
 package com.wangyin.wycds.demoapp.biz;
 
+import com.wangyin.wycds.demoapp.controller.form.UserQueryForm;
 import com.wangyin.wycds.demoapp.controller.vo.DepartmentVO;
 import com.wangyin.wycds.demoapp.controller.vo.RoleVO;
 import com.wangyin.wycds.demoapp.controller.vo.UserVO;
@@ -61,6 +62,35 @@ public class UserService {
         }
         paginator.setItems(countNum);
         List<UserDO> userDOs = userDAO.getUserList(paginator);
+        if (CollectionUtils.isEmpty(userDOs)) {
+            return null;
+        }
+        for (UserDO userDO : userDOs) {
+            UserVO userVO = new UserVO();
+            String loginName = userDO.getLoginName();
+            ConvertUtil.copyProperties(userDO, userVO);
+            userVO.setRoleVOs(getRoleList(loginName));
+            userVO.setUsergroupVOs(getUsergroupList(loginName));
+            userVO.setDepartmentVO(getDepartment(loginName));
+            userVOs.add(userVO);
+        }
+        return userVOs;
+    }
+
+    /**
+     * 获取用户基本信息
+     *
+     * @param paginator
+     * @return
+     */
+    public List<UserVO> getUserListByParameter(UserQueryForm userQueryForm,Paginator paginator) {
+        List<UserVO> userVOs = new ArrayList<UserVO>();
+        int countNum=userDAO.getUserListByParameterCount(userQueryForm);
+        if(countNum==0){
+            return  null;
+        }
+        paginator.setItems(countNum);
+        List<UserDO> userDOs = userDAO.getUserListByParameter(userQueryForm,paginator);
         if (CollectionUtils.isEmpty(userDOs)) {
             return null;
         }
